@@ -32,9 +32,6 @@ export const Header: React.FC<HeaderProps> = ({ activeAddress, onOpenApiDocs, on
               <span className="font-extrabold text-xl tracking-tight text-slate-900 dark:text-slate-100">
                 Temp<span className="text-blue-500"> Mail</span>
               </span>
-              <span className="px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase bg-blue-500/10 text-blue-500 dark:text-blue-400 border border-blue-500/20 rounded-full">
-                {t('disposableBadge')}
-              </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">{t('tagline')}</p>
           </div>

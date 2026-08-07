@@ -59,9 +59,6 @@ export const Footer: React.FC = () => {
 
         <div className="pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
           <p>© {new Date().getFullYear()} Temp Mail. {t('allRightsReserved')}</p>
-          <p className="flex items-center gap-1">
-            Built with Next.js 14, Tailwind CSS & Real-Time SSE
-          </p>
         </div>
 
       </div>
