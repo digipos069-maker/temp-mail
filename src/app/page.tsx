@@ -12,7 +12,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
     : 'en';
 
   const t = TRANSLATIONS[langCode] || TRANSLATIONS['en'];
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.tempomail.store';
 
   const title = `${t.appName} - ${t.tagline}`;
   const description = `${t.footerTagline} ${t.yourTempAddress}. ${t.disposableReadyNotice}`;

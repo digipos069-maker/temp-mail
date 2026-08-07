@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     'mail generator'
   ],
   authors: [{ name: 'Temp Mail Engineering' }],
-  metadataBase: new URL('http://localhost:3000'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.tempomail.store'),
   alternates: {
     canonical: '/',
     languages: {

@@ -40,7 +40,7 @@ export interface Inbox {
 }
 
 export const SUPPORTED_DOMAINS = [
-  'temp-pulse.io',
+  'tempomail.store',
   'disposta.net',
   'inboxpad.dev',
   'quickmail.box',

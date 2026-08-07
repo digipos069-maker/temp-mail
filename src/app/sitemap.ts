@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.tempomail.store';
   const languages = ['en', 'km', 'th', 'vi', 'ko', 'zh', 'ru', 'ja', 'fr', 'hi', 'ur', 'pt-BR'];
 
   // Map alternates for hreflang

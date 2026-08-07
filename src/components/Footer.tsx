@@ -28,7 +28,7 @@ export const Footer: React.FC = () => {
           <div className="space-y-2">
             <h4 className="font-bold text-slate-200 uppercase tracking-wider text-[11px]">{t('supportedDomains')}</h4>
             <ul className="space-y-1 text-slate-400 font-mono text-[11px]">
-              <li>@temp-pulse.io</li>
+              <li>@tempomail.store</li>
               <li>@disposta.net</li>
               <li>@inboxpad.dev</li>
               <li>@quickmail.box</li>
