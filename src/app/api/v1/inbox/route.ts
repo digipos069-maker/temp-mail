@@ -3,6 +3,10 @@ import { createInbox } from '@/lib/store';
 
 export const dynamic = 'force-dynamic';
 
+export async function GET(req: NextRequest) {
+  return NextResponse.json({ success: true, message: 'Inbox API Endpoint' });
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
