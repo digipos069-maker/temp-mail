@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
-import { ThemeProvider } from '@/lib/theme/ThemeContext';
 
 export const metadata: Metadata = {
   title: 'Temp Mail - Free Disposable Temporary Email System & Disposable Inbox',
@@ -74,14 +74,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="light scroll-smooth">
-      <body className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased selection:bg-blue-500 selection:text-white transition-colors duration-300">
-        <ThemeProvider>
-          <LanguageProvider>
-            <div className="fixed inset-0 bg-radial-glow pointer-events-none -z-10" />
-            {children}
-          </LanguageProvider>
-        </ThemeProvider>
+    <html lang="en" className="dark scroll-smooth">
+      <head>
+        {/* Google Analytics (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-3F3PY1KPDQ"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-3F3PY1KPDQ');
+          `}
+        </Script>
+      </head>
+      <body className="min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-blue-500 selection:text-white">
+        <LanguageProvider>
+          <div className="fixed inset-0 bg-radial-glow pointer-events-none -z-10" />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );
