@@ -14,6 +14,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ activeAddress, onOpenApiDocs, onOpenSimulator }) => {
   const { t } = useTranslation();
+  const isDev = process.env.NODE_ENV === 'development';
 
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 transition-all">
@@ -56,15 +57,17 @@ export const Header: React.FC<HeaderProps> = ({ activeAddress, onOpenApiDocs, on
           {/* Language Selector Dropdown */}
           <LanguageSelector />
 
-          {/* Test Simulator Button */}
-          <button
-            onClick={onOpenSimulator}
-            className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-950/40 hover:bg-purple-200 dark:hover:bg-purple-900/60 border border-purple-300 dark:border-purple-700/50 rounded-xl transition shadow-sm hover:shadow-purple-500/20 active:scale-95"
-          >
-            <Sparkles className="w-4 h-4 text-purple-500 dark:text-purple-400" />
-            <span className="hidden sm:inline">{t('sendTestEmail')}</span>
-            <span className="sm:hidden">Test</span>
-          </button>
+          {/* Test Simulator Button (Only shown in Development mode) */}
+          {isDev && (
+            <button
+              onClick={onOpenSimulator}
+              className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-950/40 hover:bg-purple-200 dark:hover:bg-purple-900/60 border border-purple-300 dark:border-purple-700/50 rounded-xl transition shadow-sm hover:shadow-purple-500/20 active:scale-95"
+            >
+              <Sparkles className="w-4 h-4 text-purple-500 dark:text-purple-400" />
+              <span className="hidden sm:inline">{t('sendTestEmail')}</span>
+              <span className="sm:hidden">Test</span>
+            </button>
+          )}
 
           {/* Developer API Docs Button */}
           <button

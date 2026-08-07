@@ -23,6 +23,7 @@ export const InboxList: React.FC<InboxListProps> = ({
 }) => {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
+  const isDev = process.env.NODE_ENV === 'development';
 
   const filteredMessages = messages.filter(
     (m) =>
@@ -82,13 +83,16 @@ export const InboxList: React.FC<InboxListProps> = ({
                 {t('disposableReadyNotice')}
               </p>
             </div>
-            <button
-              onClick={onOpenSimulator}
-              className="flex items-center gap-2 px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 rounded-xl text-xs font-semibold transition"
-            >
-              <Sparkles className="w-4 h-4 text-purple-400" />
-              <span>{t('sendSampleEmail')}</span>
-            </button>
+
+            {isDev && (
+              <button
+                onClick={onOpenSimulator}
+                className="flex items-center gap-2 px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 rounded-xl text-xs font-semibold transition"
+              >
+                <Sparkles className="w-4 h-4 text-purple-400" />
+                <span>{t('sendSampleEmail')}</span>
+              </button>
+            )}
           </div>
         ) : (
           filteredMessages.map((msg) => {
