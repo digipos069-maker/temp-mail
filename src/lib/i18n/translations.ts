@@ -85,6 +85,7 @@ export interface TranslationDictionary {
   automaticExpiry: string;
   httpsEnforced: string;
   allRightsReserved: string;
+  seoKeywords: string[];
 }
 
 export const TRANSLATIONS: Record<LanguageCode, TranslationDictionary> = {
@@ -138,6 +139,18 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationDictionary> = {
     automaticExpiry: 'Automatic TTL Expiry',
     httpsEnforced: 'HTTPS Enforced',
     allRightsReserved: 'All rights reserved.',
+    seoKeywords: [
+      'temp mail',
+      'temporary email',
+      'disposable email',
+      '10 minute mail',
+      'throwaway email',
+      'fake email generator',
+      'free temp mail',
+      'anonymous email',
+      'temp inbox',
+      'disposable mail generator'
+    ]
   },
   km: {
     appName: 'Temp Mail',
@@ -189,6 +202,16 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationDictionary> = {
     automaticExpiry: 'លុបស្វ័យប្រវត្តិតាមពេល',
     httpsEnforced: 'ការពារដោយ HTTPS',
     allRightsReserved: 'រក្សាសិទ្ធិគ្រប់យ៉ាង។',
+    seoKeywords: [
+      'អ៊ីមែលបណ្តោះអាសន្ន',
+      'អ៊ីមែលបណ្តោះអាសន្ន ឥតគិតថ្លៃ',
+      'បង្កើតអ៊ីមែលបណ្តោះអាសន្ន',
+      'temp mail khmer',
+      'email 10 នាទី',
+      'អ៊ីមែលក្លែងក្លាយ',
+      'disposable email khmer',
+      'temp mail cambodia'
+    ]
   },
   th: {
     appName: 'Temp Mail',
@@ -240,6 +263,16 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationDictionary> = {
     automaticExpiry: 'ลบอัตโนมัติตามเวลา',
     httpsEnforced: 'เข้ารหัส HTTPS',
     allRightsReserved: 'สงวนลิขสิทธิ์ทั้งหมด',
+    seoKeywords: [
+      'อีเมลชั่วคราว',
+      'สร้างอีเมลชั่วคราว',
+      'อีเมล 10 นาที',
+      'เว็ปอีเมลชั่วคราว',
+      'เมล์ปลอม',
+      'temp mail thai',
+      'อีเมลใช้ครั้งเดียว',
+      'สมัครเว็บ อีเมลชั่วคราว'
+    ]
   },
   vi: {
     appName: 'Temp Mail',
@@ -291,6 +324,16 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationDictionary> = {
     automaticExpiry: 'Tự động hết hạn',
     httpsEnforced: 'Mã hóa HTTPS',
     allRightsReserved: 'Đã đăng ký bản quyền.',
+    seoKeywords: [
+      'email tạm thời',
+      'tạo email tạm thời',
+      'email ảo',
+      'email 10 phút',
+      'mail ảo miễn phí',
+      'temp mail tiếng việt',
+      'tạo mail rác',
+      'email dùng 1 lần'
+    ]
   },
   ko: {
     appName: 'Temp Mail',
@@ -342,6 +385,16 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationDictionary> = {
     automaticExpiry: '자동 시간 만료 삭제',
     httpsEnforced: 'HTTPS 보안 암호화',
     allRightsReserved: '모든 권리 보유.',
+    seoKeywords: [
+      '임시 이메일',
+      '10분 이메일',
+      '일회용 이메일',
+      '임시 메일 생성기',
+      '가짜 이메일',
+      '무료 임시 이메일',
+      '익명 이메일',
+      'temp mail korea'
+    ]
   },
   zh: {
     appName: 'Temp Mail',
@@ -393,6 +446,16 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationDictionary> = {
     automaticExpiry: '到期自动销毁',
     httpsEnforced: '全程 HTTPS 加密',
     allRightsReserved: '保留所有权利。',
+    seoKeywords: [
+      '临时邮箱',
+      '临时电子邮件',
+      '一次性邮箱',
+      '10分钟邮箱',
+      '匿名邮箱',
+      '免费临时邮箱',
+      '临时邮箱生成器',
+      'temp mail chinese'
+    ]
   },
   ru: {
     appName: 'Temp Mail',
@@ -444,6 +507,15 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationDictionary> = {
     automaticExpiry: 'Авто-удаление по таймеру',
     httpsEnforced: 'Защита HTTPS',
     allRightsReserved: 'Все права защищены.',
+    seoKeywords: [
+      'временная почта',
+      'одноразовая почта',
+      'почта на 10 минут',
+      'анонимная почта',
+      'создать временную почту',
+      'временный email',
+      'генератор одноразовой почты'
+    ]
   },
   ja: {
     appName: 'Temp Mail',
@@ -495,6 +567,16 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationDictionary> = {
     automaticExpiry: '自動タイマー消去',
     httpsEnforced: 'HTTPS暗号化通信',
     allRightsReserved: 'All rights reserved.',
+    seoKeywords: [
+      '捨てメアド',
+      '一時メール',
+      '10分メール',
+      '使い捨てメール',
+      'フリー捨てメアド',
+      '仮メール',
+      '捨てメール生成',
+      'temp mail japan'
+    ]
   },
   fr: {
     appName: 'Temp Mail',
@@ -546,6 +628,15 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationDictionary> = {
     automaticExpiry: 'Expiration automatique',
     httpsEnforced: 'Chiffrement HTTPS',
     allRightsReserved: 'Tous droits réservés.',
+    seoKeywords: [
+      'email temporaire',
+      'mail jetable',
+      'email 10 minutes',
+      'générateur de mail temporaire',
+      'mail anonyme gratuit',
+      'faux mail',
+      'adresse mail jetable'
+    ]
   },
   hi: {
     appName: 'Temp Mail',
@@ -597,6 +688,15 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationDictionary> = {
     automaticExpiry: 'स्वचालित समय समाप्ति',
     httpsEnforced: 'HTTPS सुरक्षित',
     allRightsReserved: 'सर्वाधिकार सुरक्षित।',
+    seoKeywords: [
+      'अस्थायी ईमेल',
+      'फ्री टेम्प ईमेल',
+      '10 मिनट ईमेल',
+      'फेक ईमेल जनरेटर',
+      'डिस्पोजेबल ईमेल',
+      'टेंप मेल',
+      'temp mail hindi'
+    ]
   },
   ur: {
     appName: 'Temp Mail',
@@ -648,6 +748,14 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationDictionary> = {
     automaticExpiry: 'خودکار ختم میعاد',
     httpsEnforced: 'HTTPS محفوظ',
     allRightsReserved: 'جملہ حقوق محفوظ ہیں۔',
+    seoKeywords: [
+      'عارضی ای میل',
+      'مفت عارضی ای میل',
+      'فیک ای میل جنریٹر',
+      '10 منٹ ای میل',
+      'temp mail urdu',
+      'عارضی میل جنریٹر'
+    ]
   },
   'pt-BR': {
     appName: 'Temp Mail',
@@ -699,5 +807,14 @@ export const TRANSLATIONS: Record<LanguageCode, TranslationDictionary> = {
     automaticExpiry: 'Expiração Automática por Cronômetro',
     httpsEnforced: 'Criptografia HTTPS',
     allRightsReserved: 'Todos os direitos reservados.',
+    seoKeywords: [
+      'email temporario',
+      'email descartavel',
+      'email 10 minutos',
+      'gerador de email falso',
+      'email anonimo gratis',
+      'temp mail brasil',
+      'criar email temporario'
+    ]
   },
 };

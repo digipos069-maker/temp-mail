@@ -9,10 +9,15 @@ import {
   LanguageInfo
 } from './translations';
 
+export type StringTranslationKey = {
+  [K in keyof TranslationDictionary]: TranslationDictionary[K] extends string ? K : never;
+}[keyof TranslationDictionary];
+
 interface LanguageContextType {
   currentLanguage: LanguageInfo;
   setLanguage: (code: LanguageCode) => void;
-  t: (key: keyof TranslationDictionary) => string;
+  t: (key: StringTranslationKey) => string;
+  getKeywords: () => string[];
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -50,13 +55,19 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const currentLanguage = SUPPORTED_LANGUAGES.find((l) => l.code === langCode) || SUPPORTED_LANGUAGES[0];
 
-  const t = (key: keyof TranslationDictionary): string => {
+  const t = (key: StringTranslationKey): string => {
     const dict = TRANSLATIONS[langCode] || TRANSLATIONS['en'];
-    return dict[key] || TRANSLATIONS['en'][key] || key;
+    const val = dict[key] || TRANSLATIONS['en'][key];
+    return typeof val === 'string' ? val : (key as string);
+  };
+
+  const getKeywords = (): string[] => {
+    const dict = TRANSLATIONS[langCode] || TRANSLATIONS['en'];
+    return dict.seoKeywords || TRANSLATIONS['en'].seoKeywords;
   };
 
   return (
-    <LanguageContext.Provider value={{ currentLanguage, setLanguage: handleSetLanguage, t }}>
+    <LanguageContext.Provider value={{ currentLanguage, setLanguage: handleSetLanguage, t, getKeywords }}>
       {children}
     </LanguageContext.Provider>
   );

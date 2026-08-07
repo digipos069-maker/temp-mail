@@ -26,14 +26,12 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   return {
     title,
     description,
-    keywords: [
+    keywords: t.seoKeywords || [
       'temp mail',
       'temporary email',
       'disposable email',
       '10 minute mail',
-      'fake mail',
-      t.appName,
-      t.yourTempAddress
+      'fake mail'
     ],
     metadataBase: new URL(baseUrl),
     alternates: {
