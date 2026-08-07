@@ -1,15 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ChevronDown, HelpCircle, ShieldCheck, Zap, Lock, Globe } from 'lucide-react';
+import { ChevronDown, HelpCircle } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n/LanguageContext';
 
 export const SeoFaqSection: React.FC = () => {
+  const { t } = useTranslation();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const faqs = [
     {
-      question: 'What is a Temporary Email Address and how does TempPulse work?',
-      answer: 'A temporary email address (also known as disposable mail, 10-minute mail, or fake mail) is a short-lived inbox that allows you to receive incoming emails without revealing your primary personal or work email address. TempPulse generates disposable addresses instantly that auto-expire after your selected duration.'
+      question: 'What is a Temporary Email Address and how does Temp Mail work?',
+      answer: 'A temporary email address (also known as disposable mail, 10-minute mail, or fake mail) is a short-lived inbox that allows you to receive incoming emails without revealing your primary personal or work email address. Temp Mail generates disposable addresses instantly that auto-expire after your selected duration.'
     },
     {
       question: 'Why should I use a disposable temporary mail address?',
@@ -17,11 +19,11 @@ export const SeoFaqSection: React.FC = () => {
     },
     {
       question: 'How fast do incoming emails arrive in my inbox?',
-      answer: 'Emails deliver instantly in real time using Server-Sent Events (SSE). Unlike legacy temp mail websites that require manual page refreshes, TempPulse updates your inbox stream in less than 500 milliseconds.'
+      answer: 'Emails deliver instantly in real time using Server-Sent Events (SSE). Unlike legacy temp mail websites that require manual page refreshes, Temp Mail updates your inbox stream in less than 500 milliseconds.'
     },
     {
-      question: 'Is TempPulse completely free to use?',
-      answer: 'Yes! TempPulse is 100% free with unlimited disposable email address generation, custom alias creation, local SMTP server access, and developer REST API integrations.'
+      question: 'Is Temp Mail completely free to use?',
+      answer: 'Yes! Temp Mail is 100% free with unlimited disposable email address generation, custom alias creation, local SMTP server access, and developer REST API integrations.'
     },
     {
       question: 'How long do temporary email addresses and messages remain active?',
@@ -57,13 +59,13 @@ export const SeoFaqSection: React.FC = () => {
         <div className="text-center mb-10 space-y-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold">
             <HelpCircle className="w-4 h-4" />
-            <span>Frequently Asked Questions</span>
+            <span>{t('faqTitle')}</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-100 tracking-tight">
-            Everything You Need to Know About Temp Mail
+            {t('faqSubtitle')}
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
-            Learn how temporary email addresses keep your personal inbox private and spam-free.
+            {t('faqDescription')}
           </p>
         </div>
 

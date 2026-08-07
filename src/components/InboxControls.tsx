@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Copy, Check, QrCode, RefreshCw, Clock, Plus, Trash2, Globe, Sparkles, ChevronDown } from 'lucide-react';
+import { Copy, Check, QrCode, RefreshCw, Clock, Plus, Trash2, Globe, Sparkles } from 'lucide-react';
 import { Inbox, SUPPORTED_DOMAINS } from '@/lib/store';
 import { formatCountdown } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n/LanguageContext';
 
 interface InboxControlsProps {
   currentInbox: Inbox | null;
@@ -26,6 +27,7 @@ export const InboxControls: React.FC<InboxControlsProps> = ({
   onOpenQrModal,
   onRefresh
 }) => {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [showCustomModal, setShowCustomModal] = useState(false);
   const [customPrefix, setCustomPrefix] = useState('');
@@ -66,20 +68,20 @@ export const InboxControls: React.FC<InboxControlsProps> = ({
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
         <div>
           <h1 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-            <span>Your Temporary Email Address</span>
+            <span>{t('yourTempAddress')}</span>
             <span className="text-xs font-normal text-slate-400 bg-slate-800 px-2 py-0.5 rounded-md border border-slate-700">
               Disposable
             </span>
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
-            Incoming messages deliver instantly without page refresh
+            {t('incomingNotice')}
           </p>
         </div>
 
         {/* Saved Active Inboxes Selector */}
         {activeInboxes.length > 1 && (
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <span className="text-xs text-slate-400 font-medium hidden sm:inline">Active:</span>
+            <span className="text-xs text-slate-400 font-medium hidden sm:inline">{t('activeInboxes')}</span>
             <select
               value={currentInbox?.address || ''}
               onChange={(e) => onSelectInbox(e.target.value)}
@@ -105,12 +107,12 @@ export const InboxControls: React.FC<InboxControlsProps> = ({
             <input
               type="text"
               readOnly
-              value={currentInbox?.address || 'Generating temp address...'}
+              value={currentInbox?.address || '...'}
               className="bg-transparent text-slate-100 font-mono font-semibold text-base sm:text-lg w-full outline-none select-all"
             />
             {copied && (
               <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20 shrink-0 ml-2 animate-fade-in">
-                Copied!
+                {t('copied')}
               </span>
             )}
           </div>
@@ -125,7 +127,7 @@ export const InboxControls: React.FC<InboxControlsProps> = ({
             className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl transition shadow-lg shadow-blue-600/30 active:scale-95 text-sm"
           >
             {copied ? <Check className="w-4 h-4 text-white" /> : <Copy className="w-4 h-4" />}
-            <span>Copy</span>
+            <span>{t('copy')}</span>
           </button>
 
           {/* Random New Address */}
@@ -144,7 +146,7 @@ export const InboxControls: React.FC<InboxControlsProps> = ({
             className="flex items-center gap-1.5 px-3 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition active:scale-95 text-sm font-medium"
           >
             <Plus className="w-4 h-4 text-purple-400" />
-            <span className="hidden sm:inline">Custom Alias</span>
+            <span className="hidden sm:inline">{t('customAlias')}</span>
           </button>
 
           {/* QR Code Button */}
@@ -160,7 +162,7 @@ export const InboxControls: React.FC<InboxControlsProps> = ({
           {currentInbox && (
             <button
               onClick={() => onDeleteInbox(currentInbox.address)}
-              title="Delete Inbox"
+              title={t('deleteInbox')}
               className="flex items-center justify-center p-3 bg-red-950/40 hover:bg-red-900/60 text-red-400 rounded-xl border border-red-800/40 transition active:scale-95 text-sm"
             >
               <Trash2 className="w-4 h-4" />
@@ -176,13 +178,13 @@ export const InboxControls: React.FC<InboxControlsProps> = ({
           <div className="flex items-center justify-between text-xs text-slate-400 mb-1.5">
             <div className="flex items-center gap-1.5 font-mono">
               <Clock className="w-3.5 h-3.5 text-blue-400" />
-              <span>Expires in: <strong className="text-slate-200">{countdown.formatted}</strong></span>
+              <span>{t('expiresIn')} <strong className="text-slate-200">{countdown.formatted}</strong></span>
             </div>
             <button
               onClick={() => onExtendTtl(currentInbox.address)}
               className="text-blue-400 hover:text-blue-300 hover:underline font-medium text-xs flex items-center gap-1"
             >
-              + Add 30 mins
+              {t('add30Mins')}
             </button>
           </div>
           <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
@@ -206,12 +208,12 @@ export const InboxControls: React.FC<InboxControlsProps> = ({
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-purple-400" />
-              Create Custom Temp Email
+              {t('createCustomTitle')}
             </h3>
             <form onSubmit={handleCreateCustom} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                  Email Prefix
+                  {t('emailPrefix')}
                 </label>
                 <input
                   type="text"
@@ -225,7 +227,7 @@ export const InboxControls: React.FC<InboxControlsProps> = ({
 
               <div>
                 <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-                  Domain Name
+                  {t('domainName')}
                 </label>
                 <select
                   value={selectedDomain}
@@ -246,13 +248,13 @@ export const InboxControls: React.FC<InboxControlsProps> = ({
                   onClick={() => setShowCustomModal(false)}
                   className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-slate-200"
                 >
-                  Cancel
+                  {t('cancel')}
                 </button>
                 <button
                   type="submit"
                   className="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-xl text-xs shadow-lg shadow-purple-600/30 transition"
                 >
-                  Generate Address
+                  {t('generateAddress')}
                 </button>
               </div>
             </form>

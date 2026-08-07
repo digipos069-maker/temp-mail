@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { LanguageProvider } from '@/lib/i18n/LanguageContext';
 
 export const metadata: Metadata = {
-  title: 'TempPulse - Free Disposable Temporary Email System & Disposable Inbox',
-  description: 'Instant, private, and free temporary email address generator. Receive emails in real-time without registration, avoid spam, test web applications, and protect your primary email.',
+  title: 'Temp Mail - Free Disposable Temporary Email System & Disposable Inbox',
+  description: 'Instant, private, and free temporary email address generator in 12 languages. Receive emails in real-time without registration, avoid spam, test web applications, and protect your primary email.',
   keywords: [
     'temp mail',
     'temporary email',
@@ -16,20 +17,37 @@ export const metadata: Metadata = {
     'temp inbox',
     'mail generator'
   ],
-  authors: [{ name: 'TempPulse Engineering' }],
+  authors: [{ name: 'Temp Mail Engineering' }],
   metadataBase: new URL('http://localhost:3000'),
+  alternates: {
+    canonical: '/',
+    languages: {
+      'en': '/',
+      'km': '/?lang=km',
+      'th': '/?lang=th',
+      'vi': '/?lang=vi',
+      'ko': '/?lang=ko',
+      'zh': '/?lang=zh',
+      'ru': '/?lang=ru',
+      'ja': '/?lang=ja',
+      'fr': '/?lang=fr',
+      'hi': '/?lang=hi',
+      'ur': '/?lang=ur',
+      'pt-BR': '/?lang=pt-BR',
+    },
+  },
   openGraph: {
-    title: 'TempPulse - Free Disposable Temporary Email System',
+    title: 'Temp Mail - Free Disposable Temporary Email System',
     description: 'Protect your primary inbox from spam. Generate instant temporary email addresses with real-time SSE delivery and security analysis.',
     type: 'website',
     url: 'http://localhost:3000',
-    siteName: 'TempPulse',
+    siteName: 'Temp Mail',
     locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TempPulse - Temporary Email Platform',
-    description: 'Instant disposable email generator with real-time SSE stream & developer API.',
+    title: 'Temp Mail - Temporary Email Platform',
+    description: 'Instant disposable email generator with real-time SSE stream & developer API in 12 languages.',
   },
   robots: {
     index: true,
@@ -52,8 +70,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark scroll-smooth">
       <body className="min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-blue-500 selection:text-white">
-        <div className="fixed inset-0 bg-radial-glow pointer-events-none -z-10" />
-        {children}
+        <LanguageProvider>
+          <div className="fixed inset-0 bg-radial-glow pointer-events-none -z-10" />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

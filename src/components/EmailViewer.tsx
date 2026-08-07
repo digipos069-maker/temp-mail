@@ -4,19 +4,15 @@ import React, { useState } from 'react';
 import {
   Mail,
   ShieldCheck,
-  ShieldAlert,
-  FileText,
   Code,
   Download,
   Trash2,
-  Lock,
   Paperclip,
   Check,
-  Image as ImageIcon,
-  ExternalLink,
-  Info
+  Image as ImageIcon
 } from 'lucide-react';
 import { EmailMessage } from '@/lib/store';
+import { useTranslation } from '@/lib/i18n/LanguageContext';
 
 interface EmailViewerProps {
   message: EmailMessage | null;
@@ -24,6 +20,7 @@ interface EmailViewerProps {
 }
 
 export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessage }) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'html' | 'text' | 'raw' | 'security'>('html');
   const [allowImages, setAllowImages] = useState(true);
 
@@ -33,9 +30,9 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
         <div className="w-16 h-16 rounded-full bg-slate-800/80 flex items-center justify-center border border-slate-700/60 mb-4">
           <Mail className="w-8 h-8 text-blue-400 opacity-60" />
         </div>
-        <h3 className="text-slate-200 font-bold text-base">No Email Selected</h3>
+        <h3 className="text-slate-200 font-bold text-base">{t('noEmailSelected')}</h3>
         <p className="text-xs text-slate-400 max-w-sm mt-1">
-          Select an email message from the inbox list on the left to read its content, inspect headers, and analyze security metrics.
+          {t('noEmailSelectedNotice')}
         </p>
       </div>
     );
@@ -68,7 +65,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
         <div>
           <h2 className="text-base font-bold text-slate-100 line-clamp-1">{message.subject}</h2>
           <div className="flex items-center gap-2 text-xs text-slate-400 mt-1">
-            <span>From: <strong className="text-slate-200">{message.senderName}</strong> &lt;{message.senderEmail}&gt;</span>
+            <span>{t('from')} <strong className="text-slate-200">{message.senderName}</strong> &lt;{message.senderEmail}&gt;</span>
           </div>
         </div>
 
@@ -103,7 +100,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
       </div>
 
       {/* Tabs Navigation Bar */}
-      <div className="px-4 py-2 border-b border-slate-800/80 bg-slate-950/30 flex items-center justify-between">
+      <div className="px-4 py-2 border-b border-slate-800/80 bg-slate-950/30 flex items-center justify-between overflow-x-auto">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setActiveTab('html')}
@@ -111,7 +108,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
               activeTab === 'html' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
             }`}
           >
-            HTML Preview
+            {t('htmlPreview')}
           </button>
           <button
             onClick={() => setActiveTab('text')}
@@ -119,7 +116,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
               activeTab === 'text' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
             }`}
           >
-            Plain Text
+            {t('plainText')}
           </button>
           <button
             onClick={() => setActiveTab('raw')}
@@ -127,7 +124,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
               activeTab === 'raw' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
             }`}
           >
-            Raw Headers
+            {t('rawHeaders')}
           </button>
           <button
             onClick={() => setActiveTab('security')}
@@ -136,7 +133,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
             }`}
           >
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            Security Score
+            {t('securityScore')}
           </button>
         </div>
 
@@ -144,14 +141,14 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
         {activeTab === 'html' && (
           <button
             onClick={() => setAllowImages(!allowImages)}
-            className={`text-[11px] font-medium px-2.5 py-1 rounded-md border flex items-center gap-1.5 transition ${
+            className={`text-[11px] font-medium px-2.5 py-1 rounded-md border flex items-center gap-1.5 transition shrink-0 ${
               allowImages
                 ? 'bg-slate-800 border-slate-700 text-slate-300'
                 : 'bg-amber-500/10 border-amber-500/30 text-amber-400'
             }`}
           >
             <ImageIcon className="w-3 h-3" />
-            <span>{allowImages ? 'Images Enabled' : 'Images Blocked'}</span>
+            <span>{allowImages ? t('imagesEnabled') : t('imagesBlocked')}</span>
           </button>
         )}
       </div>
@@ -214,7 +211,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="w-6 h-6 text-emerald-400" />
                   <div>
-                    <h4 className="font-bold text-slate-100 text-sm">Security Rating Analysis</h4>
+                    <h4 className="font-bold text-slate-100 text-sm">{t('securityRating')}</h4>
                     <p className="text-xs text-slate-400">Automated authentication & anti-phishing inspection</p>
                   </div>
                 </div>
@@ -222,7 +219,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
                   <span className="text-2xl font-extrabold text-emerald-400">
                     {message.securityScore?.score || 98}/100
                   </span>
-                  <span className="block text-[10px] text-slate-400 uppercase font-semibold">Trust Score</span>
+                  <span className="block text-[10px] text-slate-400 uppercase font-semibold">{t('trustScore')}</span>
                 </div>
               </div>
 
@@ -246,16 +243,6 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
                   </span>
                 </div>
               </div>
-
-              <div className="bg-slate-950/60 rounded-lg p-3 border border-slate-800 text-xs text-slate-300 space-y-1">
-                <span className="font-bold text-slate-200 block mb-1">Inspection Notes:</span>
-                {message.securityScore?.notes?.map((note, idx) => (
-                  <div key={idx} className="flex items-center gap-2 text-slate-400">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                    <span>{note}</span>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         )}
@@ -265,7 +252,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
           <div className="mt-4 border-t border-slate-800 pt-4">
             <h4 className="text-xs font-bold text-slate-300 flex items-center gap-1.5 mb-2">
               <Paperclip className="w-4 h-4 text-blue-400" />
-              Attachments ({message.attachments.length})
+              {t('attachments')} ({message.attachments.length})
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {message.attachments.map((att) => (
@@ -281,7 +268,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
                     onClick={() => alert(`Downloading attachment ${att.filename}`)}
                     className="p-2 bg-blue-600/20 text-blue-400 rounded-lg border border-blue-500/30 hover:bg-blue-600/30 transition text-xs font-medium"
                   >
-                    Download
+                    {t('download')}
                   </button>
                 </div>
               ))}

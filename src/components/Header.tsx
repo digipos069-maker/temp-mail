@@ -1,7 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Mail, Zap, Terminal, Shield, Sparkles } from 'lucide-react';
+import { Mail, Terminal, Sparkles } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n/LanguageContext';
+import { LanguageSelector } from './LanguageSelector';
 
 interface HeaderProps {
   activeAddress?: string;
@@ -10,6 +12,8 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ activeAddress, onOpenApiDocs, onOpenSimulator }) => {
+  const { t } = useTranslation();
+
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -24,26 +28,29 @@ export const Header: React.FC<HeaderProps> = ({ activeAddress, onOpenApiDocs, on
           <div>
             <div className="flex items-center gap-2">
               <span className="font-extrabold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
-                Temp<span className="text-blue-500">Pulse</span>
+                Temp<span className="text-blue-500"> Mail</span>
               </span>
               <span className="px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full">
-                v1.0 Pro
+                {t('disposableBadge')}
               </span>
             </div>
-            <p className="text-xs text-slate-400 hidden sm:block">Disposable & Real-time Temp Email System</p>
+            <p className="text-xs text-slate-400 hidden sm:block">{t('tagline')}</p>
           </div>
         </div>
 
         {/* Action Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Live Indicator */}
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
-            SSE Stream Connected
+            {t('sseConnected')}
           </div>
+
+          {/* Language Selector Dropdown */}
+          <LanguageSelector />
 
           {/* Test Simulator Button */}
           <button
@@ -51,7 +58,7 @@ export const Header: React.FC<HeaderProps> = ({ activeAddress, onOpenApiDocs, on
             className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-purple-300 bg-purple-950/40 hover:bg-purple-900/60 border border-purple-700/50 rounded-xl transition shadow-sm hover:shadow-purple-500/20 active:scale-95"
           >
             <Sparkles className="w-4 h-4 text-purple-400" />
-            <span className="hidden sm:inline">Send Test Email</span>
+            <span className="hidden sm:inline">{t('sendTestEmail')}</span>
             <span className="sm:hidden">Test</span>
           </button>
 
@@ -61,7 +68,7 @@ export const Header: React.FC<HeaderProps> = ({ activeAddress, onOpenApiDocs, on
             className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-slate-200 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl transition shadow-sm active:scale-95"
           >
             <Terminal className="w-4 h-4 text-blue-400" />
-            <span>API Docs</span>
+            <span>{t('apiDocs')}</span>
           </button>
         </div>
 

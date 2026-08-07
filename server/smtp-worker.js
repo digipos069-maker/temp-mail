@@ -64,6 +64,6 @@ const server = new SMTPServer({
 });
 
 server.listen(PORT, () => {
-  console.log(`🚀 [TempPulse SMTP Server] Listening on port ${PORT}...`);
+  console.log(`🚀 [Temp Mail SMTP Server] Listening on port ${PORT}...`);
   console.log(`📫 You can send test emails directly to localhost:${PORT}`);
 });

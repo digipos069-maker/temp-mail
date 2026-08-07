@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Mail, Search, Inbox as InboxIcon, ShieldCheck, Paperclip, RefreshCw, Sparkles } from 'lucide-react';
 import { EmailMessage } from '@/lib/store';
 import { formatTimeAgo } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n/LanguageContext';
 
 interface InboxListProps {
   messages: EmailMessage[];
@@ -20,6 +21,7 @@ export const InboxList: React.FC<InboxListProps> = ({
   onRefresh,
   onOpenSimulator,
 }) => {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredMessages = messages.filter(
@@ -36,7 +38,7 @@ export const InboxList: React.FC<InboxListProps> = ({
       <div className="p-4 border-b border-slate-800 flex items-center justify-between gap-3 bg-slate-950/40">
         <div className="flex items-center gap-2">
           <InboxIcon className="w-5 h-5 text-blue-400" />
-          <h2 className="font-bold text-slate-100 text-sm">Inbox Messages</h2>
+          <h2 className="font-bold text-slate-100 text-sm">{t('inboxMessages')}</h2>
           <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
             {messages.length}
           </span>
@@ -58,7 +60,7 @@ export const InboxList: React.FC<InboxListProps> = ({
             <Search className="w-4 h-4 text-slate-500 absolute left-3" />
             <input
               type="text"
-              placeholder="Search emails..."
+              placeholder={t('searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 outline-none focus:border-blue-500"
@@ -75,9 +77,9 @@ export const InboxList: React.FC<InboxListProps> = ({
               <Mail className="w-8 h-8 text-slate-500 animate-pulse" />
             </div>
             <div>
-              <h3 className="text-slate-200 font-semibold text-sm">Waiting for incoming emails...</h3>
+              <h3 className="text-slate-200 font-semibold text-sm">{t('waitingForEmails')}</h3>
               <p className="text-xs text-slate-400 max-w-xs mt-1">
-                Your disposable address is ready. Send an email to this address or use our test simulator.
+                {t('disposableReadyNotice')}
               </p>
             </div>
             <button
@@ -85,7 +87,7 @@ export const InboxList: React.FC<InboxListProps> = ({
               className="flex items-center gap-2 px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 rounded-xl text-xs font-semibold transition"
             >
               <Sparkles className="w-4 h-4 text-purple-400" />
-              <span>Send Sample Email</span>
+              <span>{t('sendSampleEmail')}</span>
             </button>
           </div>
         ) : (
@@ -134,7 +136,7 @@ export const InboxList: React.FC<InboxListProps> = ({
                     {msg.attachments && msg.attachments.length > 0 && (
                       <span className="inline-flex items-center gap-1 text-[10px] text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">
                         <Paperclip className="w-3 h-3 text-blue-400" />
-                        {msg.attachments.length} attachment{msg.attachments.length > 1 ? 's' : ''}
+                        {msg.attachments.length} {t('attachments')}
                       </span>
                     )}
                   </div>
