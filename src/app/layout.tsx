@@ -19,6 +19,11 @@ export const metadata: Metadata = {
     'mail generator'
   ],
   authors: [{ name: 'Temp Mail Engineering' }],
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.tempomail.store'),
   alternates: {
     canonical: '/',
