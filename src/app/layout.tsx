@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Script from 'next/script';
 import './globals.css';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
+import { ThemeProvider } from '@/lib/theme/ThemeContext';
 
 export const metadata: Metadata = {
   title: 'Temp Mail - Free Disposable Temporary Email System & Disposable Inbox',
@@ -76,6 +77,27 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark scroll-smooth">
       <head>
+        {/* Anti-FOUC Theme Script: Instant Theme Detection Before Paint */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var saved = localStorage.getItem('temppulse_theme');
+                  var root = document.documentElement;
+                  if (saved === 'light') {
+                    root.classList.add('light');
+                    root.classList.remove('dark');
+                  } else if (saved === 'dark') {
+                    root.classList.add('dark');
+                    root.classList.remove('light');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+
         {/* Google Analytics (gtag.js) */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-3F3PY1KPDQ"
@@ -90,11 +112,13 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className="min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-blue-500 selection:text-white">
-        <LanguageProvider>
-          <div className="fixed inset-0 bg-radial-glow pointer-events-none -z-10" />
-          {children}
-        </LanguageProvider>
+      <body className="min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-blue-500 selection:text-white transition-colors duration-300">
+        <ThemeProvider>
+          <LanguageProvider>
+            <div className="fixed inset-0 bg-radial-glow pointer-events-none -z-10" />
+            {children}
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
