@@ -74,6 +74,11 @@ export function createInbox(customPrefix?: string, customDomain?: string, ttlMin
   const domain = (customDomain && SUPPORTED_DOMAINS.includes(customDomain)) ? customDomain : SUPPORTED_DOMAINS[0];
   const address = `${prefix}@${domain}`;
 
+  const existing = globalStore.inboxes.get(address);
+  if (existing) {
+    return existing;
+  }
+
   const now = new Date();
   const expiresAt = new Date(now.getTime() + ttlMinutes * 60 * 1000);
 
@@ -97,14 +102,21 @@ export function createInbox(customPrefix?: string, customDomain?: string, ttlMin
 export function getInbox(address: string): Inbox | null {
   const normalized = address.toLowerCase().trim();
   const inbox = globalStore.inboxes.get(normalized);
-  if (!inbox) return null;
-
-  // Check if expired
-  if (new Date(inbox.expiresAt).getTime() < Date.now()) {
-    deleteInbox(normalized);
-    return null;
+  if (inbox) {
+    if (new Date(inbox.expiresAt).getTime() < Date.now()) {
+      deleteInbox(normalized);
+      return null;
+    }
+    return inbox;
   }
-  return inbox;
+
+  // Auto-create inbox if it is on a supported domain
+  const parts = normalized.split('@');
+  if (parts.length === 2 && (SUPPORTED_DOMAINS.includes(parts[1]) || parts[1] === 'tempomail.store' || parts[1] === 'www.tempomail.store')) {
+    return createInbox(parts[0], parts[1]);
+  }
+
+  return null;
 }
 
 export function extendInboxTtl(address: string, additionalMinutes: number = 30): Inbox | null {
@@ -134,7 +146,6 @@ export function addMessage(address: string, messageData: Partial<EmailMessage>):
   const normalized = address.toLowerCase().trim();
   let inbox = getInbox(normalized);
 
-  // Auto-create inbox if receiving message via webhook/SMTP
   if (!inbox) {
     const parts = normalized.split('@');
     inbox = createInbox(parts[0], parts[1] || SUPPORTED_DOMAINS[0]);
