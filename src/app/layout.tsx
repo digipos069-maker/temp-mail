@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
+import { ThemeProvider } from '@/lib/theme/ThemeContext';
 
 export const metadata: Metadata = {
   title: 'Temp Mail - Free Disposable Temporary Email System & Disposable Inbox',
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
     title: 'Temp Mail - Free Disposable Temporary Email System',
     description: 'Protect your primary inbox from spam. Generate instant temporary email addresses with real-time SSE delivery and security analysis.',
     type: 'website',
-    url: 'http://localhost:3000',
+    url: 'https://www.tempomail.store',
     siteName: 'Temp Mail',
     locale: 'en_US',
   },
@@ -69,11 +70,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark scroll-smooth">
-      <body className="min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-blue-500 selection:text-white">
-        <LanguageProvider>
-          <div className="fixed inset-0 bg-radial-glow pointer-events-none -z-10" />
-          {children}
-        </LanguageProvider>
+      <body className="min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-blue-500 selection:text-white transition-colors duration-300">
+        <ThemeProvider>
+          <LanguageProvider>
+            <div className="fixed inset-0 bg-radial-glow pointer-events-none -z-10" />
+            {children}
+          </LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
