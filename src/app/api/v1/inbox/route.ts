@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => ({}));
     const prefix = body.prefix || undefined;
     const domain = body.domain || undefined;
-    const ttlMinutes = body.ttlMinutes || 60;
+    const ttlMinutes = body.ttlMinutes || 15;
 
     const inbox = createInbox(prefix, domain, ttlMinutes);
     return NextResponse.json({ success: true, inbox });

@@ -69,7 +69,7 @@ export function generateRandomPrefix(): string {
   return `${adj}.${noun}.${randomHex}`;
 }
 
-export function createInbox(customPrefix?: string, customDomain?: string, ttlMinutes: number = 60): Inbox {
+export function createInbox(customPrefix?: string, customDomain?: string, ttlMinutes: number = 15): Inbox {
   const prefix = (customPrefix || generateRandomPrefix()).toLowerCase().replace(/[^a-z0-9._-]/g, '');
   const domain = (customDomain && SUPPORTED_DOMAINS.includes(customDomain)) ? customDomain : SUPPORTED_DOMAINS[0];
   const address = `${prefix}@${domain}`;

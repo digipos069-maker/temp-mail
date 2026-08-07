@@ -37,8 +37,8 @@ export function formatCountdown(expiresAtIso: string): { formatted: string; perc
 
   const formatted = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-  // Assuming initial duration of 60 mins (3600s) for percentage bar calculation
-  const percentage = Math.min(100, Math.max(0, (totalSeconds / 3600) * 100));
+  // Assuming initial duration of 15 mins (900s) for percentage bar calculation
+  const percentage = Math.min(100, Math.max(0, (totalSeconds / 900) * 100));
 
   return { formatted, percentage, isExpired: false };
 }
