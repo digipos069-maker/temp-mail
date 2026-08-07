@@ -69,8 +69,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark scroll-smooth">
-      <body className="min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-blue-500 selection:text-white transition-colors duration-300">
+    <html lang="en" className="light scroll-smooth">
+      <body className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased selection:bg-blue-500 selection:text-white transition-colors duration-300">
         <ThemeProvider>
           <LanguageProvider>
             <div className="fixed inset-0 bg-radial-glow pointer-events-none -z-10" />

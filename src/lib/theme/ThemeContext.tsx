@@ -13,29 +13,29 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<ThemeMode>('dark');
+  const [theme, setThemeState] = useState<ThemeMode>('light');
 
-  // Load theme preference on mount
+  // Load theme preference on mount (default is light)
   useEffect(() => {
     const savedTheme = localStorage.getItem('temppulse_theme') as ThemeMode;
     if (savedTheme === 'light' || savedTheme === 'dark') {
       setThemeState(savedTheme);
       applyTheme(savedTheme);
     } else {
-      // Default to dark theme
-      setThemeState('dark');
-      applyTheme('dark');
+      // Default to light theme
+      setThemeState('light');
+      applyTheme('light');
     }
   }, []);
 
   const applyTheme = (newTheme: ThemeMode) => {
     const root = document.documentElement;
-    if (newTheme === 'dark') {
-      root.classList.add('dark');
-      root.classList.remove('light');
-    } else {
+    if (newTheme === 'light') {
       root.classList.add('light');
       root.classList.remove('dark');
+    } else {
+      root.classList.add('dark');
+      root.classList.remove('light');
     }
   };
 
@@ -46,7 +46,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const toggleTheme = () => {
-    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(nextTheme);
   };
 
