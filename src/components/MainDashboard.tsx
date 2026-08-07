@@ -1,6 +1,20 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import {
+  Inbox,
+  EmailMessage,
+  createInbox,
+  getInbox,
+  getMessages,
+  extendInboxTtl,
+  deleteInbox,
+  subscribeToInbox,
+  markAsRead,
+  SUPPORTED_DOMAINS
+} from '@/lib/store';
+import { LanguageCode } from '@/lib/i18n/translations';
+import { useTranslation } from '@/lib/i18n/LanguageContext';
 import { Header } from '@/components/Header';
 import { InboxControls } from '@/components/InboxControls';
 import { InboxList } from '@/components/InboxList';
@@ -10,244 +24,187 @@ import { QrCodeModal } from '@/components/QrCodeModal';
 import { ApiDocsModal } from '@/components/ApiDocsModal';
 import { SeoFaqSection } from '@/components/SeoFaqSection';
 import { Footer } from '@/components/Footer';
-import { Inbox, EmailMessage } from '@/lib/store';
-import { useTranslation } from '@/lib/i18n/LanguageContext';
-import { LanguageCode } from '@/lib/i18n/translations';
 
 interface MainDashboardProps {
   initialLang?: LanguageCode;
 }
 
 export default function MainDashboard({ initialLang }: MainDashboardProps) {
-  const { t, setLanguage } = useTranslation();
+  const { setLanguage } = useTranslation();
 
-  // Set initial language from URL searchParams if provided
+  const [activeAddress, setActiveAddress] = useState<string>('');
+  const [allInboxes, setAllInboxes] = useState<Inbox[]>([]);
+  const [messages, setMessages] = useState<EmailMessage[]>([]);
+  const [selectedMessage, setSelectedMessage] = useState<EmailMessage | null>(null);
+
+  // Modals
+  const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
+  const [isQrOpen, setIsQrOpen] = useState(false);
+  const [isApiDocsOpen, setIsApiDocsOpen] = useState(false);
+
   useEffect(() => {
     if (initialLang) {
       setLanguage(initialLang);
     }
   }, [initialLang, setLanguage]);
 
-  const [currentInbox, setCurrentInbox] = useState<Inbox | null>(null);
-  const [activeInboxes, setActiveInboxes] = useState<Inbox[]>([]);
-  const [messages, setMessages] = useState<EmailMessage[]>([]);
-  const [selectedMessage, setSelectedMessage] = useState<EmailMessage | null>(null);
-
-  // Modals
-  const [showSimulator, setShowSimulator] = useState(false);
-  const [showQrModal, setShowQrModal] = useState(false);
-  const [showApiDocs, setShowApiDocs] = useState(false);
-
-  // Generate or Load Inbox
-  const handleGenerateInbox = async (customPrefix?: string, customDomain?: string) => {
-    try {
-      const res = await fetch('/api/v1/inbox', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ customPrefix, customDomain, ttlMinutes: 60 }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        const newInbox: Inbox = data.inbox;
-        setCurrentInbox(newInbox);
-        setActiveInboxes((prev) => [newInbox, ...prev.filter((i) => i.address !== newInbox.address)]);
-        setMessages([]);
-        setSelectedMessage(null);
-      }
-    } catch (err) {
-      console.error('Failed to create inbox:', err);
-    }
-  };
-
-  // Initial load
+  // Initial inbox creation
   useEffect(() => {
-    handleGenerateInbox();
+    const defaultInbox = createInbox();
+    setActiveAddress(defaultInbox.address);
+    setAllInboxes([defaultInbox]);
   }, []);
 
-  // Fetch messages for current inbox
-  const fetchMessages = useCallback(async () => {
-    if (!currentInbox) return;
-    try {
-      const res = await fetch(`/api/v1/inbox/${encodeURIComponent(currentInbox.address)}/messages`);
-      const data = await res.json();
-      if (data.success) {
-        setMessages(data.messages);
+  // Fetch inbox messages when activeAddress changes
+  useEffect(() => {
+    if (!activeAddress) return;
+
+    const fetchMessages = () => {
+      const list = getMessages(activeAddress);
+      setMessages([...list]);
+      if (list.length > 0 && !selectedMessage) {
+        setSelectedMessage(list[0]);
       }
-    } catch (err) {
-      console.error('Failed to fetch messages:', err);
-    }
-  }, [currentInbox]);
+    };
 
-  useEffect(() => {
     fetchMessages();
-  }, [fetchMessages]);
 
-  // Real-time SSE listener
-  useEffect(() => {
-    if (!currentInbox) return;
-
-    const sseUrl = `/api/v1/stream/${encodeURIComponent(currentInbox.address)}`;
-    const eventSource = new EventSource(sseUrl);
-
-    eventSource.addEventListener('new_mail', (e: MessageEvent) => {
-      try {
-        const newMsg: EmailMessage = JSON.parse(e.data);
-        setMessages((prev) => [newMsg, ...prev.filter((m) => m.id !== newMsg.id)]);
-      } catch (err) {
-        console.error('Error parsing SSE event:', err);
+    // Subscribe to SSE real-time updates for active inbox
+    const unsubscribe = subscribeToInbox(activeAddress, (newMessage) => {
+      setMessages((prev) => [newMessage, ...prev]);
+      if (!selectedMessage) {
+        setSelectedMessage(newMessage);
       }
     });
 
     return () => {
-      eventSource.close();
+      unsubscribe();
     };
-  }, [currentInbox]);
+  }, [activeAddress, selectedMessage]);
 
   const handleSelectInbox = (address: string) => {
-    const target = activeInboxes.find((i) => i.address === address);
-    if (target) {
-      setCurrentInbox(target);
+    setActiveAddress(address);
+    setSelectedMessage(null);
+    const list = getMessages(address);
+    setMessages([...list]);
+  };
+
+  const handleExtendTtl = (address: string) => {
+    const updated = extendInboxTtl(address, 30);
+    if (updated) {
+      setAllInboxes((prev) => prev.map((inbox) => (inbox.address === address ? { ...updated } : inbox)));
+    }
+  };
+
+  const handleDeleteInbox = (address: string) => {
+    deleteInbox(address);
+    const remaining = allInboxes.filter((i) => i.address !== address);
+    if (remaining.length > 0) {
+      setAllInboxes(remaining);
+      setActiveAddress(remaining[0].address);
+      setMessages(getMessages(remaining[0].address));
+      setSelectedMessage(null);
+    } else {
+      const newInbox = createInbox();
+      setAllInboxes([newInbox]);
+      setActiveAddress(newInbox.address);
+      setMessages([]);
       setSelectedMessage(null);
     }
   };
 
-  const handleExtendTtl = async (address: string) => {
-    try {
-      const res = await fetch(`/api/v1/inbox/${encodeURIComponent(address)}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ additionalMinutes: 30 }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        const updated = data.inbox;
-        setCurrentInbox(updated);
-        setActiveInboxes((prev) => prev.map((i) => (i.address === address ? updated : i)));
-      }
-    } catch (err) {
-      console.error(err);
+  // Replaces the current active address with a fresh new address
+  const handleGenerateNew = (prefix?: string, domain?: string) => {
+    if (activeAddress) {
+      deleteInbox(activeAddress);
     }
+    const newInbox = createInbox(prefix, domain);
+    const remainingInboxes = allInboxes.filter((i) => i.address !== activeAddress);
+    setAllInboxes([newInbox, ...remainingInboxes]);
+    setActiveAddress(newInbox.address);
+    setMessages([]);
+    setSelectedMessage(null);
   };
 
-  const handleDeleteInbox = async (address: string) => {
-    try {
-      await fetch(`/api/v1/inbox/${encodeURIComponent(address)}`, { method: 'DELETE' });
-      const remaining = activeInboxes.filter((i) => i.address !== address);
-      setActiveInboxes(remaining);
-      if (remaining.length > 0) {
-        setCurrentInbox(remaining[0]);
-      } else {
-        handleGenerateInbox();
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  const handleSelectMessage = (msg: EmailMessage) => {
+    markAsRead(activeAddress, msg.id);
+    setSelectedMessage(msg);
+    setMessages((prev) =>
+      prev.map((m) => (m.id === msg.id ? { ...m, isUnread: false } : m))
+    );
   };
 
-  const handleDeleteMessage = async (messageId: string) => {
-    if (!currentInbox) return;
-    try {
-      await fetch(`/api/v1/inbox/${encodeURIComponent(currentInbox.address)}/messages?id=${messageId}`, {
-        method: 'DELETE',
-      });
-      setMessages((prev) => prev.filter((m) => m.id !== messageId));
-      if (selectedMessage?.id === messageId) {
-        setSelectedMessage(null);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const currentInboxObj = getInbox(activeAddress) || allInboxes[0] || null;
 
   return (
-    <div className="min-h-screen flex flex-col justify-between selection:bg-blue-500 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
       
-      {/* Header Navbar */}
+      {/* Top Navbar Header */}
       <Header
-        activeAddress={currentInbox?.address}
-        onOpenApiDocs={() => setShowApiDocs(true)}
-        onOpenSimulator={() => setShowSimulator(true)}
+        activeAddress={activeAddress}
+        onOpenApiDocs={() => setIsApiDocsOpen(true)}
+        onOpenSimulator={() => setIsSimulatorOpen(true)}
       />
 
       {/* Main Content Area */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1 space-y-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         
-        {/* SEO Main Heading Shell */}
-        <div className="text-center max-w-3xl mx-auto space-y-3">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-100">
-            Instant <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400">{t('appName')}</span>
-          </h1>
-          <p className="text-sm sm:text-base text-slate-400 font-normal leading-relaxed">
-            {t('disposableReadyNotice')}
-          </p>
-        </div>
-
         {/* Inbox Control Box */}
         <InboxControls
-          currentInbox={currentInbox}
-          activeInboxes={activeInboxes}
-          onGenerateNew={handleGenerateInbox}
+          currentInbox={currentInboxObj}
+          activeInboxes={allInboxes}
+          onGenerateNew={handleGenerateNew}
           onSelectInbox={handleSelectInbox}
           onExtendTtl={handleExtendTtl}
           onDeleteInbox={handleDeleteInbox}
-          onOpenQrModal={() => setShowQrModal(true)}
-          onRefresh={fetchMessages}
+          onOpenQrModal={() => setIsQrOpen(true)}
+          onRefresh={() => setMessages([...getMessages(activeAddress)])}
         />
 
-        {/* Dual Panel Grid (Messages List + Message Viewer) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          
-          {/* Left Column: Inbox List (5 cols) */}
+        {/* 2-Column Dashboard Layout (Left: Message List, Right: Email Reader) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-5">
             <InboxList
               messages={messages}
               selectedMessageId={selectedMessage?.id || null}
-              onSelectMessage={setSelectedMessage}
-              onRefresh={fetchMessages}
-              onOpenSimulator={() => setShowSimulator(true)}
+              onSelectMessage={handleSelectMessage}
+              onRefresh={() => setMessages([...getMessages(activeAddress)])}
+              onOpenSimulator={() => setIsSimulatorOpen(true)}
             />
           </div>
 
-          {/* Right Column: Email Detail Viewer (7 cols) */}
           <div className="lg:col-span-7">
-            <EmailViewer
-              message={selectedMessage}
-              onDeleteMessage={handleDeleteMessage}
-            />
+            <EmailViewer message={selectedMessage} />
           </div>
-
         </div>
 
-        {/* Pre-rendered SEO FAQ Section */}
+        {/* SEO FAQ Section & Schema.org Rich Snippets */}
         <SeoFaqSection />
-
       </main>
-
-      {/* Modals */}
-      {currentInbox && (
-        <TestSimulatorModal
-          activeAddress={currentInbox.address}
-          isOpen={showSimulator}
-          onClose={() => setShowSimulator(false)}
-          onSendSuccess={fetchMessages}
-        />
-      )}
-
-      {currentInbox && (
-        <QrCodeModal
-          address={currentInbox.address}
-          isOpen={showQrModal}
-          onClose={() => setShowQrModal(false)}
-        />
-      )}
-
-      <ApiDocsModal
-        isOpen={showApiDocs}
-        onClose={() => setShowApiDocs(false)}
-      />
 
       {/* Footer */}
       <Footer />
+
+      {/* Modals */}
+      <TestSimulatorModal
+        isOpen={isSimulatorOpen}
+        onClose={() => setIsSimulatorOpen(false)}
+        activeAddress={activeAddress}
+        onSendSuccess={() => {
+          setMessages([...getMessages(activeAddress)]);
+        }}
+      />
+
+      <QrCodeModal
+        isOpen={isQrOpen}
+        onClose={() => setIsQrOpen(false)}
+        address={activeAddress}
+      />
+
+      <ApiDocsModal
+        isOpen={isApiDocsOpen}
+        onClose={() => setIsApiDocsOpen(false)}
+      />
 
     </div>
   );

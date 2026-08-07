@@ -4,7 +4,6 @@ import React from 'react';
 import { Mail, Terminal, Sparkles } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n/LanguageContext';
 import { LanguageSelector } from './LanguageSelector';
-import { ThemeToggle } from './ThemeToggle';
 
 interface HeaderProps {
   activeAddress?: string;
@@ -12,7 +11,11 @@ interface HeaderProps {
   onOpenSimulator: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ activeAddress, onOpenApiDocs, onOpenSimulator }) => {
+export const Header: React.FC<HeaderProps> = ({
+  activeAddress,
+  onOpenApiDocs,
+  onOpenSimulator,
+}) => {
   const { t } = useTranslation();
   const isDev = process.env.NODE_ENV === 'development';
 
@@ -29,27 +32,24 @@ export const Header: React.FC<HeaderProps> = ({ activeAddress, onOpenApiDocs, on
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-xl tracking-tight text-slate-900 dark:text-slate-100">
+              <span className="font-extrabold text-xl tracking-tight text-slate-100">
                 Temp<span className="text-blue-500"> Mail</span>
               </span>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">{t('tagline')}</p>
+            <p className="text-xs text-slate-400 hidden sm:block">{t('tagline')}</p>
           </div>
         </div>
 
         {/* Action Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Live Indicator */}
-          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 dark:text-emerald-400 text-xs font-medium">
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
             {t('sseConnected')}
           </div>
-
-          {/* Theme Toggle (Sun/Moon) */}
-          <ThemeToggle />
 
           {/* Language Selector Dropdown */}
           <LanguageSelector />
@@ -58,9 +58,9 @@ export const Header: React.FC<HeaderProps> = ({ activeAddress, onOpenApiDocs, on
           {isDev && (
             <button
               onClick={onOpenSimulator}
-              className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-950/40 hover:bg-purple-200 dark:hover:bg-purple-900/60 border border-purple-300 dark:border-purple-700/50 rounded-xl transition shadow-sm hover:shadow-purple-500/20 active:scale-95"
+              className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-purple-300 bg-purple-950/40 hover:bg-purple-900/60 border border-purple-700/50 rounded-xl transition shadow-sm hover:shadow-purple-500/20 active:scale-95"
             >
-              <Sparkles className="w-4 h-4 text-purple-500 dark:text-purple-400" />
+              <Sparkles className="w-4 h-4 text-purple-400" />
               <span className="hidden sm:inline">{t('sendTestEmail')}</span>
               <span className="sm:hidden">Test</span>
             </button>
@@ -69,9 +69,9 @@ export const Header: React.FC<HeaderProps> = ({ activeAddress, onOpenApiDocs, on
           {/* Developer API Docs Button */}
           <button
             onClick={onOpenApiDocs}
-            className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl transition shadow-sm active:scale-95"
+            className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-slate-200 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl transition shadow-sm active:scale-95"
           >
-            <Terminal className="w-4 h-4 text-blue-500 dark:text-blue-400" />
+            <Terminal className="w-4 h-4 text-blue-400" />
             <span>{t('apiDocs')}</span>
           </button>
         </div>

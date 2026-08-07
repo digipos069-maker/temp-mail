@@ -16,7 +16,7 @@ import { useTranslation } from '@/lib/i18n/LanguageContext';
 
 interface EmailViewerProps {
   message: EmailMessage | null;
-  onDeleteMessage: (messageId: string) => void;
+  onDeleteMessage?: (messageId: string) => void;
 }
 
 export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessage }) => {
@@ -90,7 +90,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
           </button>
 
           <button
-            onClick={() => onDeleteMessage(message.id)}
+            onClick={() => onDeleteMessage && onDeleteMessage(message.id)}
             title="Delete Email"
             className="p-1.5 bg-red-950/40 hover:bg-red-900/60 text-red-400 rounded-lg border border-red-800/40 transition"
           >
