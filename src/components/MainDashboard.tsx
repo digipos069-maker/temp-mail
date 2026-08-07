@@ -55,32 +55,63 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
     setAllInboxes([defaultInbox]);
   }, []);
 
-  // Fetch inbox messages when activeAddress changes
+  // Fetch inbox messages from API & subscribe to SSE real-time stream
   useEffect(() => {
     if (!activeAddress) return;
 
-    const fetchMessages = () => {
-      const list = getMessages(activeAddress);
-      setMessages([...list]);
-      if (list.length > 0 && !selectedMessage) {
-        setSelectedMessage(list[0]);
+    const fetchMessagesFromApi = async () => {
+      try {
+        // First load local memory list
+        const localList = getMessages(activeAddress);
+        
+        // Fetch real-time message list from server API endpoint
+        const res = await fetch(`/api/v1/inbox/${encodeURIComponent(activeAddress)}/messages`, {
+          cache: 'no-store'
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.messages)) {
+            setMessages(data.messages);
+            if (data.messages.length > 0 && !selectedMessage) {
+              setSelectedMessage(data.messages[0]);
+            }
+            return;
+          }
+        }
+
+        setMessages([...localList]);
+        if (localList.length > 0 && !selectedMessage) {
+          setSelectedMessage(localList[0]);
+        }
+      } catch (err) {
+        const localList = getMessages(activeAddress);
+        setMessages([...localList]);
       }
     };
 
-    fetchMessages();
+    fetchMessagesFromApi();
+
+    // Auto-poll API every 3 seconds as a resilient backup to SSE stream
+    const pollInterval = setInterval(() => {
+      fetchMessagesFromApi();
+    }, 3000);
 
     // Subscribe to SSE real-time updates for active inbox
     const unsubscribe = subscribeToInbox(activeAddress, (newMessage) => {
-      setMessages((prev) => [newMessage, ...prev]);
-      if (!selectedMessage) {
-        setSelectedMessage(newMessage);
-      }
+      setMessages((prev) => {
+        const exists = prev.some((m) => m.id === newMessage.id);
+        if (exists) return prev;
+        return [newMessage, ...prev];
+      });
+      setSelectedMessage((prev) => prev || newMessage);
     });
 
     return () => {
+      clearInterval(pollInterval);
       unsubscribe();
     };
-  }, [activeAddress, selectedMessage]);
+  }, [activeAddress]);
 
   const handleSelectInbox = (address: string) => {
     setActiveAddress(address);
@@ -158,7 +189,13 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
           onExtendTtl={handleExtendTtl}
           onDeleteInbox={handleDeleteInbox}
           onOpenQrModal={() => setIsQrOpen(true)}
-          onRefresh={() => setMessages([...getMessages(activeAddress)])}
+          onRefresh={() => {
+            fetch(`/api/v1/inbox/${encodeURIComponent(activeAddress)}/messages`, { cache: 'no-store' })
+              .then((res) => res.json())
+              .then((data) => {
+                if (data.messages) setMessages(data.messages);
+              });
+          }}
         />
 
         {/* 2-Column Dashboard Layout (Left: Message List, Right: Email Reader) */}
@@ -168,7 +205,13 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
               messages={messages}
               selectedMessageId={selectedMessage?.id || null}
               onSelectMessage={handleSelectMessage}
-              onRefresh={() => setMessages([...getMessages(activeAddress)])}
+              onRefresh={() => {
+                fetch(`/api/v1/inbox/${encodeURIComponent(activeAddress)}/messages`, { cache: 'no-store' })
+                  .then((res) => res.json())
+                  .then((data) => {
+                    if (data.messages) setMessages(data.messages);
+                  });
+              }}
               onOpenSimulator={() => setIsSimulatorOpen(true)}
             />
           </div>
@@ -191,7 +234,11 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
         onClose={() => setIsSimulatorOpen(false)}
         activeAddress={activeAddress}
         onSendSuccess={() => {
-          setMessages([...getMessages(activeAddress)]);
+          fetch(`/api/v1/inbox/${encodeURIComponent(activeAddress)}/messages`, { cache: 'no-store' })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.messages) setMessages(data.messages);
+            });
         }}
       />
 
