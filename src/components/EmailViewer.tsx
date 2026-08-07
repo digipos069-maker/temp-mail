@@ -9,9 +9,7 @@ import {
   ShieldCheck,
   Check,
   Code,
-  FileText,
-  Eye,
-  Image as ImageIcon
+  FileText
 } from 'lucide-react';
 import { EmailMessage } from '@/lib/store';
 import { formatTimeAgo } from '@/lib/utils';
@@ -24,8 +22,7 @@ interface EmailViewerProps {
 
 export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessage }) => {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<'html' | 'text' | 'raw' | 'security'>('html');
-  const [allowImages, setAllowImages] = useState(true);
+  const [activeTab, setActiveTab] = useState<'text' | 'raw' | 'security'>('text');
 
   if (!message) {
     return (
@@ -42,52 +39,6 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
       </div>
     );
   }
-
-  // Format HTML srcDoc cleanly without double document nesting
-  const prepareHtmlDoc = (rawHtml: string, showImages: boolean) => {
-    let html = rawHtml || '';
-
-    // Inject image blocking CSS if images are disabled
-    if (!showImages) {
-      const styleTag = '<style>img { display: none !important; }</style>';
-      if (html.includes('</head>')) {
-        html = html.replace('</head>', `${styleTag}</head>`);
-      } else {
-        html = `${styleTag}${html}`;
-      }
-    }
-
-    // Check if rawHtml is already a complete HTML document
-    const isFullDoc = /<!DOCTYPE|<html/i.test(rawHtml);
-    if (isFullDoc) {
-      return html;
-    }
-
-    // Wrap partial HTML snippet
-    return `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <style>
-            body {
-              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-              margin: 0;
-              padding: 20px;
-              color: #0f172a;
-              background-color: #ffffff;
-              line-height: 1.6;
-            }
-            img { max-width: 100%; height: auto; }
-            a { color: #2563eb; text-decoration: underline; }
-            table { max-width: 100% !important; }
-          </style>
-        </head>
-        <body>${html}</body>
-      </html>
-    `;
-  };
 
   return (
     <div className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-3xl flex flex-col h-[600px] overflow-hidden backdrop-blur-xl shadow-xl shadow-slate-200/50 dark:shadow-2xl transition-colors duration-300">
@@ -124,18 +75,6 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
         <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200 dark:border-slate-800/60">
           <div className="flex items-center gap-1 bg-slate-200/80 dark:bg-slate-950 p-1 rounded-xl">
             <button
-              onClick={() => setActiveTab('html')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
-                activeTab === 'html'
-                  ? 'bg-blue-600 text-white shadow-md'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-              }`}
-            >
-              <Eye className="w-3.5 h-3.5" />
-              <span>{t('htmlPreview')}</span>
-            </button>
-
-            <button
               onClick={() => setActiveTab('text')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
                 activeTab === 'text'
@@ -171,43 +110,16 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
               <span>{t('securityScore')}</span>
             </button>
           </div>
-
-          {/* Toggle Remote Images */}
-          {activeTab === 'html' && (
-            <button
-              onClick={() => setAllowImages(!allowImages)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition ${
-                allowImages
-                  ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/20'
-                  : 'bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-500/20'
-              }`}
-            >
-              <ImageIcon className="w-3.5 h-3.5" />
-              <span>{allowImages ? t('imagesEnabled') : t('imagesBlocked')}</span>
-            </button>
-          )}
         </div>
       </div>
 
       {/* Email Body Content Panel */}
       <div className="flex-1 overflow-y-auto p-4 bg-slate-100/50 dark:bg-slate-950/40">
         
-        {/* HTML View Mode */}
-        {activeTab === 'html' && (
-          <div className="w-full h-full bg-white rounded-2xl overflow-hidden shadow-inner border border-slate-200 dark:border-slate-800">
-            <iframe
-              title="Sanitized Email Viewer"
-              srcDoc={prepareHtmlDoc(message.bodyHtml || message.bodyText, allowImages)}
-              sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-              className="w-full h-full min-h-[400px] border-none"
-            />
-          </div>
-        )}
-
-        {/* Plain Text View Mode */}
+        {/* Plain Text View Mode (Default) */}
         {activeTab === 'text' && (
           <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 font-mono text-xs text-slate-800 dark:text-slate-200 whitespace-pre-wrap leading-relaxed select-text shadow-sm">
-            {message.bodyText || message.bodyHtml || 'No plain text representation available.'}
+            {message.bodyText || message.bodyHtml?.replace(/<[^>]*>?/gm, '') || 'No text content available.'}
           </div>
         )}
 
@@ -220,9 +132,9 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
             To: {message.inboxAddress}{'\n'}
             Subject: {message.subject}{'\n'}
             Authentication-Results: tempomail.store; spf=pass dkim=pass dmarc=pass{'\n'}
-            Content-Type: text/html; charset=utf-8{'\n'}
+            Content-Type: text/plain; charset=utf-8{'\n'}
             {'\n'}
-            {message.rawMime || message.bodyHtml}
+            {message.rawMime || message.bodyText || message.bodyHtml}
           </div>
         )}
 

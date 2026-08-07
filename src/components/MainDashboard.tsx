@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Inbox,
   EmailMessage,
@@ -37,6 +37,14 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
   const [messages, setMessages] = useState<EmailMessage[]>([]);
   const [selectedMessage, setSelectedMessage] = useState<EmailMessage | null>(null);
 
+  // Ref to track user's selected message without stale closure issues
+  const selectedMessageRef = useRef<EmailMessage | null>(null);
+
+  // Keep ref in sync with selectedMessage state
+  useEffect(() => {
+    selectedMessageRef.current = selectedMessage;
+  }, [selectedMessage]);
+
   // Modals
   const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
   const [isQrOpen, setIsQrOpen] = useState(false);
@@ -61,7 +69,6 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
 
     const fetchMessagesFromApi = async () => {
       try {
-        // First load local memory list
         const localList = getMessages(activeAddress);
         
         // Fetch real-time message list from server API endpoint
@@ -73,7 +80,9 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
           const data = await res.json();
           if (data.success && Array.isArray(data.messages)) {
             setMessages(data.messages);
-            if (data.messages.length > 0 && !selectedMessage) {
+            
+            // Only auto-select the first message if user hasn't selected any message yet
+            if (data.messages.length > 0 && !selectedMessageRef.current) {
               setSelectedMessage(data.messages[0]);
             }
             return;
@@ -81,12 +90,15 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
         }
 
         setMessages([...localList]);
-        if (localList.length > 0 && !selectedMessage) {
+        if (localList.length > 0 && !selectedMessageRef.current) {
           setSelectedMessage(localList[0]);
         }
       } catch (err) {
         const localList = getMessages(activeAddress);
         setMessages([...localList]);
+        if (localList.length > 0 && !selectedMessageRef.current) {
+          setSelectedMessage(localList[0]);
+        }
       }
     };
 
@@ -104,7 +116,11 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
         if (exists) return prev;
         return [newMessage, ...prev];
       });
-      setSelectedMessage((prev) => prev || newMessage);
+      
+      // Do NOT override user's selection if they are reading an existing email
+      if (!selectedMessageRef.current) {
+        setSelectedMessage(newMessage);
+      }
     });
 
     return () => {
@@ -116,6 +132,7 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
   const handleSelectInbox = (address: string) => {
     setActiveAddress(address);
     setSelectedMessage(null);
+    selectedMessageRef.current = null;
     const list = getMessages(address);
     setMessages([...list]);
   };
@@ -135,12 +152,14 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
       setActiveAddress(remaining[0].address);
       setMessages(getMessages(remaining[0].address));
       setSelectedMessage(null);
+      selectedMessageRef.current = null;
     } else {
       const newInbox = createInbox();
       setAllInboxes([newInbox]);
       setActiveAddress(newInbox.address);
       setMessages([]);
       setSelectedMessage(null);
+      selectedMessageRef.current = null;
     }
   };
 
@@ -155,11 +174,13 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
     setActiveAddress(newInbox.address);
     setMessages([]);
     setSelectedMessage(null);
+    selectedMessageRef.current = null;
   };
 
   const handleSelectMessage = (msg: EmailMessage) => {
     markAsRead(activeAddress, msg.id);
     setSelectedMessage(msg);
+    selectedMessageRef.current = msg;
     setMessages((prev) =>
       prev.map((m) => (m.id === msg.id ? { ...m, isUnread: false } : m))
     );
@@ -217,7 +238,14 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
           </div>
 
           <div className="lg:col-span-7">
-            <EmailViewer message={selectedMessage} />
+            <EmailViewer
+              message={selectedMessage}
+              onDeleteMessage={(msgId) => {
+                setMessages((prev) => prev.filter((m) => m.id !== msgId));
+                setSelectedMessage(null);
+                selectedMessageRef.current = null;
+              }}
+            />
           </div>
         </div>
 
