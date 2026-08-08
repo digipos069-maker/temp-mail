@@ -22,7 +22,7 @@ interface EmailViewerProps {
 
 export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessage }) => {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<'text' | 'raw' | 'security'>('text');
+  const [activeTab, setActiveTab] = useState<'html' | 'text' | 'raw' | 'security'>('html');
 
   if (!message) {
     return (
@@ -75,6 +75,18 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
         <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200 dark:border-slate-800/60">
           <div className="flex items-center gap-1 bg-slate-200/80 dark:bg-slate-950 p-1 rounded-xl">
             <button
+              onClick={() => setActiveTab('html')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+                activeTab === 'html'
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+              }`}
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>HTML</span>
+            </button>
+
+            <button
               onClick={() => setActiveTab('text')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
                 activeTab === 'text'
@@ -116,7 +128,25 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ message, onDeleteMessa
       {/* Email Body Content Panel */}
       <div className="flex-1 overflow-y-auto p-4 bg-slate-100/50 dark:bg-slate-950/40">
         
-        {/* Plain Text View Mode (Default) */}
+        {/* HTML View Mode */}
+        {activeTab === 'html' && (
+          <div className="bg-white p-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm h-full flex flex-col">
+            {message.bodyHtml ? (
+              <iframe
+                srcDoc={message.bodyHtml}
+                className="w-full flex-1 rounded-xl bg-white"
+                sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin"
+                title="Email Content"
+              />
+            ) : (
+              <div className="p-5 text-center text-slate-500 font-mono text-sm">
+                No HTML content available.
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Plain Text View Mode */}
         {activeTab === 'text' && (
           <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 font-mono text-xs text-slate-800 dark:text-slate-200 whitespace-pre-wrap leading-relaxed select-text shadow-sm">
             {message.bodyText || message.bodyHtml?.replace(/<[^>]*>?/gm, '') || 'No text content available.'}
