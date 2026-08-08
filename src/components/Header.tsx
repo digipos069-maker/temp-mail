@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Mail, Terminal, Sparkles } from 'lucide-react';
+import Link from 'next/link';
+import { Mail, Terminal, Sparkles, BookOpen } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n/LanguageContext';
 import { LanguageSelector } from './LanguageSelector';
 import { ThemeToggle } from './ThemeToggle';
@@ -25,8 +26,8 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
         {/* Brand Logo */}
-        <div className="flex items-center gap-3">
-          <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 p-[1px] shadow-lg shadow-blue-500/20">
+        <Link href="/" className="flex items-center gap-3 group cursor-pointer">
+          <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 p-[1px] shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-all">
             <div className="w-full h-full bg-white dark:bg-slate-950 rounded-[11px] flex items-center justify-center">
               <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400 animate-pulse" />
             </div>
@@ -39,7 +40,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">{t('tagline')}</p>
           </div>
-        </div>
+        </Link>
 
         {/* Action Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
@@ -69,6 +70,15 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="sm:hidden">Test</span>
             </button>
           )}
+
+          {/* Blog Button */}
+          <Link
+            href="/blog"
+            className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl transition shadow-sm active:scale-95"
+          >
+            <BookOpen className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <span>Blog</span>
+          </Link>
 
           {/* Developer API Docs Button */}
           <button
