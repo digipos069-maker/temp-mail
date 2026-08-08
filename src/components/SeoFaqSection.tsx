@@ -46,7 +46,7 @@ export const SeoFaqSection: React.FC = () => {
   };
 
   return (
-    <section className="w-full py-12 border-t border-slate-800/80 bg-slate-950/40 mt-12">
+    <section className="w-full py-12 border-t border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/40 mt-12">
       {/* Inject JSON-LD Schema */}
       <script
         type="application/ld+json"
@@ -57,14 +57,14 @@ export const SeoFaqSection: React.FC = () => {
         
         {/* Section Title */}
         <div className="text-center mb-10 space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 text-blue-700 dark:text-blue-400 text-xs font-semibold">
             <HelpCircle className="w-4 h-4" />
             <span>{t('faqTitle')}</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-100 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
             {t('faqSubtitle')}
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
             {t('faqDescription')}
           </p>
         </div>
@@ -77,22 +77,23 @@ export const SeoFaqSection: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden backdrop-blur-xl transition"
+                className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden backdrop-blur-xl transition"
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
-                  className="w-full p-5 text-left flex items-center justify-between gap-4 font-semibold text-slate-200 text-sm hover:text-white transition"
+                  className="w-full p-5 text-left flex items-center justify-between gap-4 font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition"
+                  aria-expanded={isOpen}
                 >
                   <span>{faq.question}</span>
                   <ChevronDown
-                    className={`w-4 h-4 text-slate-400 transition-transform duration-300 shrink-0 ${
-                      isOpen ? 'rotate-180 text-blue-400' : ''
+                    className={`w-4 h-4 text-slate-500 dark:text-slate-400 transition-transform duration-300 shrink-0 ${
+                      isOpen ? 'rotate-180 text-blue-600 dark:text-blue-400' : ''
                     }`}
                   />
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-5 text-xs text-slate-400 leading-relaxed border-t border-slate-800/40 pt-3 animate-fade-in">
+                  <div className="px-5 pb-5 text-xs text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-200 dark:border-slate-800/40 pt-3 animate-fade-in">
                     {faq.answer}
                   </div>
                 )}

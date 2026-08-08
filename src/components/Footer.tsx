@@ -26,7 +26,7 @@ export const Footer: React.FC = () => {
 
           {/* Col 2 */}
           <div className="space-y-2">
-            <h4 className="font-bold text-slate-200 uppercase tracking-wider text-[11px]">{t('supportedDomains')}</h4>
+            <h3 className="font-bold text-slate-200 uppercase tracking-wider text-[11px]">{t('supportedDomains')}</h3>
             <ul className="space-y-1 text-slate-400 font-mono text-[11px]">
               <li>@tempomail.store</li>
               <li>@disposta.net</li>
@@ -38,7 +38,7 @@ export const Footer: React.FC = () => {
 
           {/* Col 3 */}
           <div className="space-y-2">
-            <h4 className="font-bold text-slate-200 uppercase tracking-wider text-[11px]">{t('privacyCompliance')}</h4>
+            <h3 className="font-bold text-slate-200 uppercase tracking-wider text-[11px]">{t('privacyCompliance')}</h3>
             <div className="space-y-2 text-slate-400 text-xs">
               <div className="flex items-center gap-2">
                 <Shield className="w-4 h-4 text-emerald-400" />

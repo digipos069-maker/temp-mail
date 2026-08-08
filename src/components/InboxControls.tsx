@@ -97,6 +97,7 @@ export const InboxControls: React.FC<InboxControlsProps> = ({
             <input
               type="text"
               readOnly
+              aria-label="Temporary email address"
               value={currentInbox?.address || '...'}
               className="bg-transparent text-blue-600 dark:text-blue-400 font-mono font-bold text-base sm:text-lg w-full outline-none select-all"
             />
@@ -137,16 +138,18 @@ export const InboxControls: React.FC<InboxControlsProps> = ({
           {/* Custom Alias Creator Button */}
           <button
             onClick={() => setShowCustomModal(true)}
+            aria-label={t('customAlias')}
             className="flex items-center gap-1.5 px-3.5 py-3.5 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-700 dark:text-blue-300 rounded-2xl border border-blue-200 dark:border-blue-700/50 transition active:scale-95 text-xs font-bold"
           >
             <Plus className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <span className="hidden sm:inline">{t('customAlias')}</span>
+            <span className="hidden sm:inline" aria-hidden="true">{t('customAlias')}</span>
           </button>
 
           {/* QR Code Button */}
           <button
             onClick={onOpenQrModal}
             title="Scan QR Code for Mobile"
+            aria-label="Scan QR Code for Mobile"
             className="flex items-center justify-center p-3.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl border border-slate-300 dark:border-slate-700 transition active:scale-95 text-sm"
           >
             <QrCode className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
@@ -157,6 +160,7 @@ export const InboxControls: React.FC<InboxControlsProps> = ({
             <button
               onClick={() => onDeleteInbox(currentInbox.address)}
               title={t('deleteInbox')}
+              aria-label={t('deleteInbox')}
               className="flex items-center justify-center p-3.5 bg-rose-50 dark:bg-red-950/40 hover:bg-rose-100 dark:hover:bg-red-900/60 text-rose-600 dark:text-red-400 rounded-2xl border border-rose-200 dark:border-red-800/40 transition active:scale-95 text-sm"
             >
               <Trash2 className="w-4 h-4" />
@@ -205,10 +209,11 @@ export const InboxControls: React.FC<InboxControlsProps> = ({
             </h3>
             <form onSubmit={handleCreateCustom} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-2">
+                <label htmlFor="customPrefixInput" className="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-2">
                   {t('emailPrefix')}
                 </label>
                 <input
+                  id="customPrefixInput"
                   type="text"
                   placeholder="e.g. john.doe"
                   value={customPrefix}
