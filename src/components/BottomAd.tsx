@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-export function LeftSidebarAd() {
+export function BottomAd() {
   const banner = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -10,13 +10,13 @@ export function LeftSidebarAd() {
       const conf = document.createElement('script');
       const script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = `//www.highperformanceformat.com/bd29cdf1ab432d67e473f034d5252a0a/invoke.js`;
+      script.src = `//www.highperformanceformat.com/1eec78a7da1bc340939805bdbe075be1/invoke.js`;
       conf.type = 'text/javascript';
       conf.innerHTML = `atOptions = {
-        'key' : 'bd29cdf1ab432d67e473f034d5252a0a',
+        'key' : '1eec78a7da1bc340939805bdbe075be1',
         'format' : 'iframe',
-        'height' : 600,
-        'width' : 160,
+        'height' : 90,
+        'width' : 728,
         'params' : {}
       };`;
 
@@ -26,8 +26,8 @@ export function LeftSidebarAd() {
   }, []);
 
   return (
-    <div className="hidden xl:block fixed left-4 top-1/2 -translate-y-1/2 w-[160px] h-[600px] z-50 rounded-lg overflow-hidden border border-slate-800 bg-slate-900/50 shadow-xl">
-      <div ref={banner} className="w-full h-full flex items-center justify-center"></div>
+    <div className="hidden md:flex w-full justify-center my-8">
+      <div ref={banner} className="flex items-center justify-center min-w-[728px] min-h-[90px]"></div>
     </div>
   );
 }

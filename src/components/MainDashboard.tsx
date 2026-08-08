@@ -28,6 +28,7 @@ import { LeftSidebarAd } from '@/components/LeftSidebarAd';
 import { MobileTopAd } from '@/components/MobileTopAd';
 import { DesktopTopAd } from '@/components/DesktopTopAd';
 import { RightSidebarAd } from '@/components/RightSidebarAd';
+import { BottomAd } from '@/components/BottomAd';
 
 interface MainDashboardProps {
   initialLang?: LanguageCode;
@@ -261,6 +262,9 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
         {/* SEO FAQ Section & Schema.org Rich Snippets */}
         <SeoFaqSection />
       </main>
+
+      {/* Bottom Ad */}
+      <BottomAd />
 
       {/* Footer */}
       <Footer />
