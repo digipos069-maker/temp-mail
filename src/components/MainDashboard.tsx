@@ -24,11 +24,11 @@ import { QrCodeModal } from '@/components/QrCodeModal';
 import { ApiDocsModal } from '@/components/ApiDocsModal';
 import { SeoFaqSection } from '@/components/SeoFaqSection';
 import { Footer } from '@/components/Footer';
-import { LeftSidebarAd } from '@/components/LeftSidebarAd';
-import { MobileTopAd } from '@/components/MobileTopAd';
-import { DesktopTopAd } from '@/components/DesktopTopAd';
-import { RightSidebarAd } from '@/components/RightSidebarAd';
-import { BottomAd } from '@/components/BottomAd';
+import { LeftSidebarAd } from '@/components/ads/LeftSidebarAd';
+import { RightSidebarAd } from '@/components/ads/RightSidebarAd';
+import { MobileTopAd } from '@/components/ads/MobileTopAd';
+import { DesktopTopAd } from '@/components/ads/DesktopTopAd';
+import { BottomAd } from '@/components/ads/BottomAd';
 
 interface MainDashboardProps {
   initialLang?: LanguageCode;
