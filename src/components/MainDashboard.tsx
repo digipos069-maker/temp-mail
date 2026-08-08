@@ -24,6 +24,10 @@ import { QrCodeModal } from '@/components/QrCodeModal';
 import { ApiDocsModal } from '@/components/ApiDocsModal';
 import { SeoFaqSection } from '@/components/SeoFaqSection';
 import { Footer } from '@/components/Footer';
+import { LeftSidebarAd } from '@/components/LeftSidebarAd';
+import { MobileTopAd } from '@/components/MobileTopAd';
+import { DesktopTopAd } from '@/components/DesktopTopAd';
+import { RightSidebarAd } from '@/components/RightSidebarAd';
 
 interface MainDashboardProps {
   initialLang?: LanguageCode;
@@ -197,6 +201,11 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
         onOpenApiDocs={() => setIsApiDocsOpen(true)}
         onOpenSimulator={() => setIsSimulatorOpen(true)}
       />
+
+      <LeftSidebarAd />
+      <RightSidebarAd />
+      <MobileTopAd />
+      <DesktopTopAd />
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
