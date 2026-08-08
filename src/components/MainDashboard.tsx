@@ -209,7 +209,7 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
       <DesktopTopAd />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
         {/* Inbox Control Box */}
         <InboxControls
@@ -228,6 +228,9 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
               });
           }}
         />
+
+        {/* Middle Ad (Mobile Only) */}
+        <MobileTopAd />
 
         {/* 2-Column Dashboard Layout (Left: Message List, Right: Email Reader) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -265,6 +268,7 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
 
       {/* Bottom Ad */}
       <BottomAd />
+      <MobileTopAd />
 
       {/* Footer */}
       <Footer />
