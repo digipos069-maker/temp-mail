@@ -7,11 +7,52 @@ import { blogPosts } from '@/data/blogPosts';
 export const metadata = {
   title: 'Blog | Temp Mail - Disposable Email Articles & Guides',
   description: 'Read the latest guides, security tips, and articles about temporary email, digital privacy, and how to protect your inbox from spam.',
+  alternates: {
+    canonical: '/blog',
+  },
+  openGraph: {
+    title: 'Blog | Temp Mail - Disposable Email Articles & Guides',
+    description: 'Read the latest guides, security tips, and articles about temporary email, digital privacy, and how to protect your inbox from spam.',
+    url: '/blog',
+    type: 'website',
+  },
+};
+
+const blogSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  'name': 'Temp Mail Blog',
+  'description': 'Articles and guides about digital privacy and temporary email.',
+  'url': 'https://www.tempomail.store/blog',
+  'publisher': {
+    '@type': 'Organization',
+    'name': 'Temp Mail',
+    'logo': {
+      '@type': 'ImageObject',
+      'url': 'https://www.tempomail.store/icon.svg'
+    }
+  },
+  'blogPost': blogPosts.map((post) => ({
+    '@type': 'BlogPosting',
+    'headline': post.title,
+    'description': post.excerpt,
+    'image': `https://www.tempomail.store${post.coverImage}`,
+    'datePublished': post.date,
+    'author': {
+      '@type': 'Person',
+      'name': post.author
+    },
+    'url': `https://www.tempomail.store/blog/${post.slug}`
+  }))
 };
 
 export default function BlogIndex() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300 pb-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}
+      />
       {/* Blog Header Hero */}
       <div className="bg-slate-900 border-b border-slate-800 text-slate-100 py-16 sm:py-24 px-4 sm:px-6 relative overflow-hidden">
         <div className="absolute inset-0 bg-blue-500/10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/40 via-slate-900 to-slate-900 pointer-events-none" />

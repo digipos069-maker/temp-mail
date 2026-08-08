@@ -12,6 +12,31 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return {
     title: `${post.title} | Temp Mail Blog`,
     description: post.excerpt,
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: `/blog/${post.slug}`,
+      type: 'article',
+      publishedTime: post.date,
+      authors: [post.author],
+      images: [
+        {
+          url: post.coverImage,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        }
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+      images: [post.coverImage],
+    }
   };
 }
 
@@ -78,8 +103,37 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     });
   };
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    'headline': post.title,
+    'description': post.excerpt,
+    'image': `https://www.tempomail.store${post.coverImage}`,
+    'datePublished': post.date,
+    'author': {
+      '@type': 'Person',
+      'name': post.author
+    },
+    'publisher': {
+      '@type': 'Organization',
+      'name': 'Temp Mail',
+      'logo': {
+        '@type': 'ImageObject',
+        'url': 'https://www.tempomail.store/icon.svg'
+      }
+    },
+    'mainEntityOfPage': {
+      '@type': 'WebPage',
+      '@id': `https://www.tempomail.store/blog/${post.slug}`
+    }
+  };
+
   return (
     <article className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300 pb-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       
       {/* Back button */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-12 pb-6">
