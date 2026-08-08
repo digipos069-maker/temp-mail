@@ -27,6 +27,8 @@ import { Footer } from '@/components/Footer';
 import { LeftSidebarAd } from '@/components/ads/LeftSidebarAd';
 import { RightSidebarAd } from '@/components/ads/RightSidebarAd';
 import { MobileTopAd } from '@/components/ads/MobileTopAd';
+import { MobileMiddleAd } from '@/components/ads/MobileMiddleAd';
+import { MobileBottomAd } from '@/components/ads/MobileBottomAd';
 import { DesktopTopAd } from '@/components/ads/DesktopTopAd';
 import { BottomAd } from '@/components/ads/BottomAd';
 
@@ -230,7 +232,7 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
         />
 
         {/* Middle Ad (Mobile Only) */}
-        <MobileTopAd />
+        <MobileMiddleAd />
 
         {/* 2-Column Dashboard Layout (Left: Message List, Right: Email Reader) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -268,7 +270,7 @@ export default function MainDashboard({ initialLang }: MainDashboardProps) {
 
       {/* Bottom Ad */}
       <BottomAd />
-      <MobileTopAd />
+      <MobileBottomAd />
 
       {/* Footer */}
       <Footer />
