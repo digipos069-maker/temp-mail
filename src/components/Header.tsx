@@ -83,7 +83,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Developer API Docs Button */}
           <button
             onClick={onOpenApiDocs}
-            className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl transition shadow-sm active:scale-95"
+            className="hidden sm:flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl transition shadow-sm active:scale-95"
           >
             <Terminal className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             <span>{t('apiDocs')}</span>
