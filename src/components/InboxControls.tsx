@@ -34,7 +34,7 @@ export const InboxControls: React.FC<InboxControlsProps> = ({
 
   const countdown = currentInbox
     ? formatCountdown(currentInbox.expiresAt)
-    : { formatted: '60:00', percentage: 100, isExpired: false };
+    : { formatted: '03:00', percentage: 100, isExpired: false };
 
   const handleCopy = () => {
     if (!currentInbox) return;
