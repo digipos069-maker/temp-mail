@@ -2,10 +2,14 @@
 
 import { useEffect, useRef } from 'react';
 
+const IS_PROD = process.env.NODE_ENV === 'production';
+
 export function MobileTopAd() {
   const banner = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!IS_PROD) return;
+
     if (banner.current && !banner.current.firstChild) {
       const conf = document.createElement('script');
       const script = document.createElement('script');
@@ -27,7 +31,13 @@ export function MobileTopAd() {
 
   return (
     <div className="flex lg:hidden w-full justify-center my-4 overflow-hidden">
-      <div ref={banner} className="flex items-center justify-center min-w-[468px] min-h-[60px]"></div>
+      {IS_PROD ? (
+        <div ref={banner} className="flex items-center justify-center min-w-[468px] min-h-[60px]"></div>
+      ) : (
+        <div className="flex items-center justify-center min-w-[468px] min-h-[60px] bg-slate-800 text-slate-400 text-sm border border-slate-700 rounded-lg">
+          Mobile Ad Placeholder (468x60)
+        </div>
+      )}
     </div>
   );
 }
