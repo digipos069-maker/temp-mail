@@ -14,7 +14,7 @@ export function LeftSidebarAd() {
       const conf = document.createElement('script');
       const script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = `//www.highperformanceformat.com/bd29cdf1ab432d67e473f034d5252a0a/invoke.js`;
+      script.src = `//manyapostle.com/bd29cdf1ab432d67e473f034d5252a0a/invoke.js`;
       conf.type = 'text/javascript';
       conf.innerHTML = `atOptions = {
         'key' : 'bd29cdf1ab432d67e473f034d5252a0a',

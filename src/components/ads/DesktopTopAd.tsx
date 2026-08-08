@@ -14,7 +14,7 @@ export function DesktopTopAd() {
       const conf = document.createElement('script');
       const script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = `//www.highperformanceformat.com/1eec78a7da1bc340939805bdbe075be1/invoke.js`;
+      script.src = `//manyapostle.com/1eec78a7da1bc340939805bdbe075be1/invoke.js`;
       conf.type = 'text/javascript';
       conf.innerHTML = `atOptions = {
         'key' : '1eec78a7da1bc340939805bdbe075be1',
