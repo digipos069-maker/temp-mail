@@ -75,7 +75,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark scroll-smooth">
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Anti-FOUC Theme Script: Instant Theme Detection Before Paint */}
         <script
@@ -85,12 +85,11 @@ export default function RootLayout({
                 try {
                   var saved = localStorage.getItem('temppulse_theme');
                   var root = document.documentElement;
-                  if (saved === 'light') {
-                    root.classList.add('light');
-                    root.classList.remove('dark');
-                  } else if (saved === 'dark') {
+                  root.classList.add('scroll-smooth');
+                  if (saved === 'dark') {
                     root.classList.add('dark');
-                    root.classList.remove('light');
+                  } else {
+                    root.classList.add('light');
                   }
                 } catch (e) {}
               })();
@@ -112,7 +111,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className="min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-blue-500 selection:text-white transition-colors duration-300">
+      <body className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased selection:bg-blue-500 selection:text-white">
         <ThemeProvider>
           <LanguageProvider>
             <div className="fixed inset-0 bg-radial-glow pointer-events-none -z-10" />

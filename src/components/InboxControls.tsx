@@ -175,8 +175,8 @@ export const InboxControls: React.FC<InboxControlsProps> = ({
               <span>{t('expiresIn')} <strong className="text-slate-900 dark:text-slate-100 text-sm font-bold">{countdown.formatted}</strong></span>
             </div>
             <button
-              onClick={() => onExtendTtl(currentInbox.address)}
-              className="px-3 py-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 border border-blue-200 dark:border-blue-500/30 rounded-xl transition"
+              disabled
+              className="px-3 py-1.5 text-xs font-semibold text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl cursor-not-allowed opacity-60"
             >
               {t('add30Mins')}
             </button>

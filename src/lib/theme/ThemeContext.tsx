@@ -26,6 +26,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setThemeState('light');
       applyTheme('light');
     }
+
+    // Enable smooth transitions only after initial load to prevent FOUC glitch
+    setTimeout(() => {
+      document.body.classList.add('transition-colors', 'duration-300');
+    }, 50);
   }, []);
 
   const applyTheme = (newTheme: ThemeMode) => {
