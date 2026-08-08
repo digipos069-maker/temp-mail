@@ -14,7 +14,7 @@ export function MobileTopAd() {
       const conf = document.createElement('script');
       const script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = `//www.highperformanceformat.com/a0e17a57111024426ad8916c81fd8b08/invoke.js`;
+      script.src = `//manyapostle.com/a0e17a57111024426ad8916c81fd8b08/invoke.js`;
       conf.type = 'text/javascript';
       conf.innerHTML = `atOptions = {
         'key' : 'a0e17a57111024426ad8916c81fd8b08',
